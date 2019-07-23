@@ -1,11 +1,22 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 
 export class PersonsService {
-  persons: string[] = ['Brass', 'Lyra', 'Gishath', 'Goreclaw', 'Neheb', 'Yuriko'];
+  personsChanged = new Subject<string[]>();
+
+  public persons: string[] = ['Brass', 'Lyra', 'Gishath', 'Goreclaw', 'Neheb', 'Yuriko'];
+
   addPerson(name: string){
     this.persons.push(name);
-    console.log(this.persons);
+    this.personsChanged.next(this.persons);
+  }
+
+  removePerson(name: string){
+    this.persons = this.persons.filter(persons => {
+      return persons !== name;
+    });
+    this.personsChanged.next(this.persons);
   }
 }
